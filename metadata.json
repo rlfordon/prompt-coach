@@ -1,0 +1,5 @@
+{
+  "name": "Prompt Coach",
+  "description": "A split-panel web app for law students to practice AI prompting techniques with a dedicated coaching interface.",
+  "requestFramePermissions": []
+}
