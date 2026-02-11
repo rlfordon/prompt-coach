@@ -1,4 +1,6 @@
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
@@ -182,9 +184,6 @@ app.get('/api/providers', (_req, res) => {
   res.json({ providers });
 });
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 if (process.env.NODE_ENV === 'production') {
@@ -196,7 +195,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const listenPort = process.env.NODE_ENV === 'production' ? 5000 : PORT;
-const listenHost = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+const listenHost = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
 
 app.listen(listenPort, listenHost, () => {
   console.log(`Server running on http://${listenHost}:${listenPort}`);
