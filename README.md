@@ -1,20 +1,56 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Prompt Coach
 
-# Run and deploy your AI Studio app
+An interactive prompt engineering coach for law students at The Ohio State University Moritz College of Law. Students practice crafting effective prompts across multiple AI platforms and receive expert coaching feedback on their technique.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1HPfLjOFTfCA4TzMfws59hEqQiiqmf8f2
+- **Multi-Provider Workspace** - Chat with Gemini, ChatGPT, or Claude directly in the app
+- **Model Selection** - Choose between fast and reasoning-tier models for each provider
+- **Coaching Feedback** - Get detailed analysis of your prompting technique across multiple focus areas
+- **Paste Mode** - Paste conversations from external tools (Westlaw, Lexis, NotebookLM, etc.) for review
+- **Session Export** - Download your conversation and coaching feedback as a text file
 
-## Run Locally
+## Focus Areas
 
-**Prerequisites:**  Node.js
+The coach can evaluate prompts across several dimensions:
+- Overall prompt quality
+- Prompt structure and clarity
+- Context and specificity
+- Iterative refinement technique
+- Platform-specific best practices
+- Custom questions
 
+## Setup
+
+**Prerequisites:** Node.js 20+
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+   ```
+   npm install
+   ```
+
+2. Set API keys as environment variables (at least one required):
+   - `GEMINI_API_KEY` - Google Gemini
+   - `OPENAI_API_KEY` - OpenAI / ChatGPT
+   - `ANTHROPIC_API_KEY` - Anthropic / Claude
+
 3. Run the app:
-   `npm run dev`
+   ```
+   npm run dev
+   ```
+
+The app will be available at `http://localhost:5000`.
+
+## Tech Stack
+
+- React 19 + TypeScript + Vite
+- Express backend for secure API calls
+- Tailwind CSS
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.
+
+## Author
+
+Created by **Rebecca Fordon** for the 21st Century Lawyering course at OSU Moritz College of Law.

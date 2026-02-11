@@ -300,6 +300,12 @@ const CoachPanel: React.FC<CoachPanelProps> = ({
           </div>
         )}
       </div>
+
+      <div className="px-4 py-2 border-t border-gray-100 bg-gray-50 text-center">
+        <p className="text-xs text-gray-400">
+          Created by Rebecca Fordon | MIT License
+        </p>
+      </div>
     </div>
   );
 };
