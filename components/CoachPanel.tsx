@@ -303,7 +303,7 @@ const CoachPanel: React.FC<CoachPanelProps> = ({
 
       <div className="px-4 py-2 border-t border-gray-100 bg-gray-50 text-center">
         <p className="text-xs text-gray-400">
-          Created by Rebecca Fordon | MIT License
+          Created by Rebecca Fordon | MIT License | <a href="https://github.com/rlfordon/prompt-coach" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600">GitHub</a>
         </p>
       </div>
     </div>
