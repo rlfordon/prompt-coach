@@ -15,10 +15,8 @@ Built for the **21st Century Lawyering** course at **The Ohio State University M
 
 This project has two versions:
 
-- **main branch**: Designed for Google AI Studio with Gemini models
-- **replit branch**: Modified for deployment on Replit with Anthropic Claude API
-
-If you're deploying to Replit, use the `replit` branch.
+- **main branch**: Designed for development in Google AI Studio with Gemini models. Use this branch if you're working in AI Studio.
+- **replit branch**: Modified for deployment on Replit with Anthropic Claude API. Use this branch for standalone deployment.
 
 ## Credits
 
