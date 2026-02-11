@@ -53,6 +53,10 @@ function App() {
           setIsPasteMode={setIsPasteMode}
           pastedContent={pastedContent}
           availableProviders={availableProviders}
+          onClearConversation={() => {
+            setChatHistory([]);
+            setPastedContent('');
+          }}
         />
       </div>
     </div>
