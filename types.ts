@@ -8,6 +8,12 @@ export enum ModelOption {
   PRO_THINKING = 'Gemini 2.5 Pro (Thinking)',
 }
 
+export interface ProviderConfig {
+  id: string;
+  label: string;
+  models: { tier: string; label: string }[];
+}
+
 export enum Platform {
   GEMINI = 'Gemini',
   CHATGPT = 'ChatGPT',

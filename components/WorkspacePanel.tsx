@@ -1,20 +1,53 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { ChatMessage, ModelOption } from '../types';
-import { sendMessageToGemini } from '../services/geminiService';
+import { ChatMessage } from '../types';
+import { sendChatMessage } from '../services/aiService';
+
+const PROVIDER_OPTIONS = [
+  {
+    id: 'gemini',
+    label: 'Gemini',
+    models: [
+      { tier: 'flash', label: 'Flash (Fast)' },
+      { tier: 'thinking', label: 'Pro (Thinking)' },
+    ],
+  },
+  {
+    id: 'openai',
+    label: 'ChatGPT',
+    models: [
+      { tier: 'fast', label: 'GPT-4o Mini (Fast)' },
+      { tier: 'reasoning', label: 'o3-mini (Reasoning)' },
+    ],
+  },
+  {
+    id: 'anthropic',
+    label: 'Claude',
+    models: [
+      { tier: 'fast', label: 'Claude Sonnet (Fast)' },
+      { tier: 'reasoning', label: 'Claude Sonnet (Reasoning)' },
+    ],
+  },
+];
 
 interface WorkspacePanelProps {
   chatHistory: ChatMessage[];
   setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
-  selectedModel: ModelOption;
-  setSelectedModel: (model: ModelOption) => void;
+  selectedProvider: string;
+  setSelectedProvider: (p: string) => void;
+  selectedModelTier: string;
+  setSelectedModelTier: (t: string) => void;
+  availableProviders: string[];
 }
 
-const WorkspacePanel: React.FC<WorkspacePanelProps> = ({ 
-  chatHistory, 
+const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
+  chatHistory,
   setChatHistory,
-  selectedModel,
-  setSelectedModel
+  selectedProvider,
+  setSelectedProvider,
+  selectedModelTier,
+  setSelectedModelTier,
+  availableProviders,
 }) => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +61,16 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
     scrollToBottom();
   }, [chatHistory]);
 
+  const currentProviderConfig = PROVIDER_OPTIONS.find((p) => p.id === selectedProvider) || PROVIDER_OPTIONS[0];
+
+  const handleProviderChange = (providerId: string) => {
+    setSelectedProvider(providerId);
+    const newProvider = PROVIDER_OPTIONS.find((p) => p.id === providerId);
+    if (newProvider) {
+      setSelectedModelTier(newProvider.models[0].tier);
+    }
+  };
+
   const handleSend = async () => {
     if (!inputText.trim() || isLoading) return;
 
@@ -37,16 +80,16 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
     setIsLoading(true);
 
     try {
-      // Pass the current history (excluding the new message we just added to state, 
-      // but the service function expects the history *before* the new message usually if we use chat.sendMessage
-      // Actually, my service implementation takes the history array. 
-      // Ideally, the service takes the *previous* history and the *new* message.
-      const responseText = await sendMessageToGemini(selectedModel, chatHistory, userMessage.text);
-      
+      const responseText = await sendChatMessage(
+        selectedProvider,
+        selectedModelTier,
+        chatHistory,
+        userMessage.text
+      );
       const botMessage: ChatMessage = { role: 'model', text: responseText };
       setChatHistory((prev) => [...prev, botMessage]);
-    } catch (error) {
-      const errorMessage: ChatMessage = { role: 'model', text: "Sorry, I encountered an error." };
+    } catch {
+      const errorMessage: ChatMessage = { role: 'model', text: 'Sorry, I encountered an error.' };
       setChatHistory((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -60,28 +103,44 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
     }
   };
 
+  const providerLabel = currentProviderConfig.label;
+
   return (
     <div className="flex flex-col h-full bg-[#f5f5f5] border-r border-gray-300">
-      {/* Header */}
-      <div className="p-4 border-b border-gray-200 bg-white shadow-sm flex items-center justify-between">
+      <div className="p-4 border-b border-gray-200 bg-white shadow-sm flex items-center justify-between gap-2">
         <h2 className="text-lg font-bold text-gray-800">Your Workspace</h2>
-        <div className="relative">
+        <div className="flex items-center gap-2">
           <select
-            value={selectedModel}
-            onChange={(e) => setSelectedModel(e.target.value as ModelOption)}
-            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-scarlet focus:border-scarlet sm:text-sm rounded-md shadow-sm"
+            value={selectedProvider}
+            onChange={(e) => handleProviderChange(e.target.value)}
+            className="block pl-3 pr-8 py-2 text-sm border-gray-300 focus:outline-none focus:ring-scarlet focus:border-scarlet rounded-md shadow-sm"
           >
-            <option value={ModelOption.FLASH}>{ModelOption.FLASH}</option>
-            <option value={ModelOption.PRO_THINKING}>{ModelOption.PRO_THINKING}</option>
+            {PROVIDER_OPTIONS.filter(
+              (p) => availableProviders.length === 0 || availableProviders.includes(p.id)
+            ).map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+          <select
+            value={selectedModelTier}
+            onChange={(e) => setSelectedModelTier(e.target.value)}
+            className="block pl-3 pr-8 py-2 text-sm border-gray-300 focus:outline-none focus:ring-scarlet focus:border-scarlet rounded-md shadow-sm"
+          >
+            {currentProviderConfig.models.map((m) => (
+              <option key={m.tier} value={m.tier}>
+                {m.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
-      {/* Chat History */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {chatHistory.length === 0 && (
           <div className="text-center text-gray-500 mt-10">
-            <p>Select a model and start practicing your prompting.</p>
+            <p>Select a provider and model, then start practicing your prompting.</p>
           </div>
         )}
         {chatHistory.map((msg, index) => (
@@ -101,16 +160,16 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
                   msg.role === 'user' ? 'prose-invert' : ''
                 }`}
               >
-                <ReactMarkdown 
+                <ReactMarkdown
                   components={{
-                    a: ({node, ...props}) => (
-                      <a 
-                        {...props} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                    a: ({ node, ...props }) => (
+                      <a
+                        {...props}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className={`underline ${msg.role === 'user' ? 'text-white font-bold' : 'text-blue-600 hover:text-blue-800'}`}
                       />
-                    )
+                    ),
                   }}
                 >
                   {msg.text}
@@ -122,14 +181,13 @@ const WorkspacePanel: React.FC<WorkspacePanelProps> = ({
         {isLoading && (
           <div className="flex justify-start">
             <div className="bg-white text-gray-500 border border-gray-200 rounded-lg px-4 py-3 rounded-bl-none shadow-sm">
-              <span className="animate-pulse">Gemini is thinking...</span>
+              <span className="animate-pulse">{providerLabel} is thinking...</span>
             </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
       <div className="p-4 bg-white border-t border-gray-200">
         <div className="flex space-x-2">
           <input
