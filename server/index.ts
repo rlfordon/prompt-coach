@@ -37,7 +37,7 @@ const PROVIDER_MODELS: Record<string, Record<string, string>> = {
     reasoning: 'o3-mini',
   },
   anthropic: {
-    fast: 'claude-sonnet-4-20250514',
+    fast: 'claude-haiku-4-5-20250514',
     reasoning: 'claude-sonnet-4-20250514',
   },
 };

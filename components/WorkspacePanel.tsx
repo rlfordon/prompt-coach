@@ -24,7 +24,7 @@ const PROVIDER_OPTIONS = [
     id: 'anthropic',
     label: 'Claude',
     models: [
-      { tier: 'fast', label: 'Claude Sonnet (Fast)' },
+      { tier: 'fast', label: 'Claude Haiku (Fast)' },
       { tier: 'reasoning', label: 'Claude Sonnet (Reasoning)' },
     ],
   },
