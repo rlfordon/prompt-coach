@@ -32,10 +32,9 @@ The app is a static site hosted on GitHub Pages. A static page can't keep an API
 
 Model IDs live in [`services/config.ts`](services/config.ts), along with `PROXY_URL`, the Worker's address. Keep `MODELS` in step with the Worker's `CHAT_MODELS`.
 
-## Branches
+## Deployment
 
-- `main` - the GitHub Pages version (this one). Pushing to `main` builds and deploys the site through `.github/workflows/pages.yml`.
-- `ai-studio` - the original Google AI Studio version, which calls Gemini directly from the browser.
+Pushing to `main` builds and deploys the site through `.github/workflows/pages.yml`. The original Google AI Studio version (Gemini only) is still in the git history if you ever need it.
 
 ## Development
 
