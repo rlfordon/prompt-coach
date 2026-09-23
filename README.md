@@ -2,6 +2,8 @@
 
 An interactive prompt engineering coach for law students at The Ohio State University Moritz College of Law. Students practice crafting effective prompts across multiple AI platforms and receive expert coaching feedback on their technique.
 
+**Live:** https://rlfordon.github.io/prompt-coach/
+
 ## Features
 
 - **Multi-Provider Workspace** - Chat with Gemini, ChatGPT, or Claude directly in the app
@@ -20,31 +22,36 @@ The coach can evaluate prompts across several dimensions:
 - Platform-specific best practices
 - Custom questions
 
-## Setup
+## Architecture
+
+The app is a static site hosted on GitHub Pages. A static page can't keep an API key secret, so all model calls go through a small shared Cloudflare Worker ([source](https://github.com/rlfordon/TokenExplorer/tree/main/worker)). The Worker holds one OpenRouter key and forwards requests to Gemini, OpenAI, and Claude models. It also:
+
+- accepts requests only from `rlfordon.github.io` (and localhost for development)
+- requires a class passkey when the Worker's `CLASS_PASSKEY` secret is set; the app asks for it once and remembers it in the browser
+- allows only the models listed in its `CHAT_MODELS`, and caps prompt size and output length
+
+Model IDs live in [`services/config.ts`](services/config.ts), along with `PROXY_URL`, the Worker's address. Keep `MODELS` in step with the Worker's `CHAT_MODELS`.
+
+## Branches
+
+- `main` - the GitHub Pages version (this one). Pushing to `main` builds and deploys the site through `.github/workflows/pages.yml`.
+- `ai-studio` - the original Google AI Studio version, which calls Gemini directly from the browser.
+
+## Development
 
 **Prerequisites:** Node.js 20+
 
-1. Install dependencies:
-   ```
-   npm install
-   ```
+```
+npm install
+npm run dev
+```
 
-2. Set API keys as environment variables (at least one required):
-   - `GEMINI_API_KEY` - Google Gemini
-   - `OPENAI_API_KEY` - OpenAI / ChatGPT
-   - `ANTHROPIC_API_KEY` - Anthropic / Claude
-
-3. Run the app:
-   ```
-   npm run dev
-   ```
-
-The app will be available at `http://localhost:5000`.
+The dev server runs at `http://localhost:5173/prompt-coach/`. The Worker accepts requests from localhost, so development uses the same Worker as the live site.
 
 ## Tech Stack
 
 - React 19 + TypeScript + Vite
-- Express backend for secure API calls
+- Cloudflare Worker + OpenRouter for model calls
 - Tailwind CSS
 
 ## License

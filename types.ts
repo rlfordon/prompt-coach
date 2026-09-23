@@ -3,11 +3,6 @@ export interface ChatMessage {
   text: string;
 }
 
-export enum ModelOption {
-  FLASH = 'Gemini 2.5 Flash',
-  PRO_THINKING = 'Gemini 2.5 Pro (Thinking)',
-}
-
 export interface ProviderConfig {
   id: string;
   label: string;

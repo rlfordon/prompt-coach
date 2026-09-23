@@ -8,24 +8,24 @@ const PROVIDER_OPTIONS = [
     id: 'gemini',
     label: 'Gemini',
     models: [
-      { tier: 'flash', label: 'Flash (Fast)' },
-      { tier: 'thinking', label: 'Pro (Thinking)' },
+      { tier: 'flash', label: 'Gemini 3.8 Flash (Fast)' },
+      { tier: 'thinking', label: 'Gemini 3.1 Pro (Thinking)' },
     ],
   },
   {
     id: 'openai',
     label: 'ChatGPT',
     models: [
-      { tier: 'fast', label: 'GPT-4o Mini (Fast)' },
-      { tier: 'reasoning', label: 'o3-mini (Reasoning)' },
+      { tier: 'fast', label: 'GPT-5.4 Mini (Fast)' },
+      { tier: 'reasoning', label: 'GPT-5.5 (Reasoning)' },
     ],
   },
   {
     id: 'anthropic',
     label: 'Claude',
     models: [
-      { tier: 'fast', label: 'Claude Haiku (Fast)' },
-      { tier: 'reasoning', label: 'Claude Sonnet (Reasoning)' },
+      { tier: 'fast', label: 'Claude Haiku 4.5 (Fast)' },
+      { tier: 'reasoning', label: 'Claude Sonnet 5 (Reasoning)' },
     ],
   },
 ];
